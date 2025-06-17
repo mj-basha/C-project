@@ -1,0 +1,12 @@
+C:\Users\HP\Desktop\ado\Library1\Library1\obj\Debug\Library1.csproj.AssemblyReference.cache
+C:\Users\HP\Desktop\ado\Library1\Library1\obj\Debug\Library1.Forms.AddAuthorForm.resources
+C:\Users\HP\Desktop\ado\Library1\Library1\obj\Debug\Library1.Forms.AddBookForm.resources
+C:\Users\HP\Desktop\ado\Library1\Library1\obj\Debug\Library1.Form1.resources
+C:\Users\HP\Desktop\ado\Library1\Library1\obj\Debug\Library1.Properties.Resources.resources
+C:\Users\HP\Desktop\ado\Library1\Library1\obj\Debug\Library1.csproj.GenerateResource.cache
+C:\Users\HP\Desktop\ado\Library1\Library1\obj\Debug\Library1.csproj.CoreCompileInputs.cache
+C:\Users\HP\Desktop\ado\Library1\Library1\bin\Debug\Library1.exe.config
+C:\Users\HP\Desktop\ado\Library1\Library1\bin\Debug\Library1.exe
+C:\Users\HP\Desktop\ado\Library1\Library1\bin\Debug\Library1.pdb
+C:\Users\HP\Desktop\ado\Library1\Library1\obj\Debug\Library1.exe
+C:\Users\HP\Desktop\ado\Library1\Library1\obj\Debug\Library1.pdb
