@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using iText.Kernel.Pdf;
+using System.IO;
 using pharmacy.DAL;
 using pharmacy.Models;
 
@@ -104,8 +106,10 @@ namespace pharmacy
                 };
                 invoiceDetailDAL.AddInvoiceDetail(detail);
                 ActivityLogger.Log("add invoceDetails", "تم اضافة بيانات فاتورة بنجاح", id, username);
+                QuantityDAL.decrease(MedicineDAL.getqid(medId),qty);
                 medicineDetails.Add($"- {medicine.Name} | Qty: {qty} | Price: {medicine.UnitPrice:C}");
             }
+
 
             string message = $"Customer Details:\n" +
                   $"Name: {cust.FullName}\n" +
@@ -118,6 +122,11 @@ namespace pharmacy
                   $"Items:\n{string.Join("\n", medicineDetails)}";
 
             MessageBox.Show(message, "Invoice Summary");
+            string pdfPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "Invoice.pdf");
+
+            
+            InvoiceDAL.CreateInvoicePdf(pdfPath, message);
+
 
             ClearForm();
         }

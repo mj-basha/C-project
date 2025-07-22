@@ -37,9 +37,9 @@ namespace pharmacy
             errorProvider1.Clear();
             string n = textBox1.Text.Trim();
             string s = comboBox1.Text.Trim();
-            
+            DateTime ed = dateTimePicker1.Value;
             Decimal p = Convert.ToDecimal(textBox4.Text.Trim());
-            
+            int q = Convert.ToInt32(textBox3.Text.Trim());
             string c = comboBox3.Text.Trim();
             string m = textBox2.Text.Trim();
 
@@ -91,12 +91,38 @@ namespace pharmacy
             {
                 errorProvider1.SetError(textBox2, "");
             }
+            if (string.IsNullOrEmpty(Convert.ToString(q)))
+            {
+                errorProvider1.SetError(textBox3, "اكتب الكمية");
+                return;
+            }
+            else
+            {
+                errorProvider1.SetError(textBox3, "");
+            }
 
-           
+            if (string.IsNullOrEmpty(Convert.ToString(ed)))
+            {
+                errorProvider1.SetError(dateTimePicker1, "اختر التاريخ");
+                return;
+            }
+            else
+            {
+                errorProvider1.SetError(dateTimePicker1, "");
+            }
 
-           
+            Quantity qu = new Quantity();
+            qu.quantityOF = q;
+            qu.ExpiryDate = ed;
+            qu.name = n;
 
-                Medicine medicine = new Medicine();
+            QuantityDAL.AddQuantity(qu);
+
+
+
+
+
+            Medicine medicine = new Medicine();
                 medicine.Name = n;
                 medicine.SupplierID = Convert.ToInt32(s);
                 medicine.Manufacturer = m;
@@ -224,32 +250,7 @@ namespace pharmacy
             {
                 errorProvider1.SetError(textBox1, "");
             }
-            if (string.IsNullOrEmpty(Convert.ToString(q)))
-            {
-                errorProvider1.SetError(textBox3, "اكتب الكمية");
-                return;
-            }
-            else
-            {
-                errorProvider1.SetError(textBox3, "");
-            }
-
-            if (string.IsNullOrEmpty(Convert.ToString(ed)))
-            {
-                errorProvider1.SetError(dateTimePicker1, "اختر التاريخ");
-                return;
-            }
-            else
-            {
-                errorProvider1.SetError(dateTimePicker1, "");
-            }
-
-            Quantity qu = new Quantity();
-            qu.quantityOF = q;
-            qu.ExpiryDate = ed;
-            qu.name = n;
-
-             QuantityDAL.AddQuantity(qu);
+           
             
         }
     }

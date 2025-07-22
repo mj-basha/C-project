@@ -9,87 +9,103 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Linq;
-using Newtonsoft.Json;
+//using Newtonsoft.Json;
 using pharmacy.Models;
+using System.Text.Encodings.Web;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using System.Text.Json;
 
 namespace pharmacy.Forms
 {
     public partial class CallUs : Form
     {
-        private readonly HttpClient client=new HttpClient();
-        public CallUs()
+        private readonly UserMessage userMessage;
+        static string EscapeString(string input)
+        {
+            return input?.Replace("\\", "\\\\")
+                .Replace("\"", "\\\"")
+                .Replace("\n", "\\n")
+                .Replace("\r", "\\r");
+        }
+        public CallUs(UserMessage userMessage)
         {
             InitializeComponent();
+            this.userMessage = userMessage;
+            
         }
 
         private async void button1_Click(object sender, EventArgs e)
         {
-            string url = "https://yourapi.com/api/contact";
+            string url = "http://dev2.alashiq.com/send.php?systemId=12345678832";
 
-            if (string.IsNullOrEmpty(textBox1.Text))
+            // Validate inputs
+            if (string.IsNullOrWhiteSpace(textBox1.Text))
             {
-                errorProvider1.SetError(textBox1,"اكتب اسمك");
+                errorProvider1.SetError(textBox1, "اكتب اسمك");
                 return;
             }
-            else
-            {
-                errorProvider1.SetError(textBox1, "");
-            }
+            else errorProvider1.SetError(textBox1, "");
 
-            if (string.IsNullOrEmpty(textBox2.Text))
+            if (string.IsNullOrWhiteSpace(textBox2.Text))
             {
                 errorProvider1.SetError(textBox2, "اكتب رقم المستخدم");
                 return;
             }
-            else
-            {
-                errorProvider1.SetError(textBox2, "");
-            }
+            else errorProvider1.SetError(textBox2, "");
 
-            if (string.IsNullOrEmpty(textBox3.Text))
-            {
-                errorProvider1.SetError(textBox3, "اكتب رقم الهاتف");
-                return;
-            }
-            else
-            {
-                errorProvider1.SetError(textBox3, "");
-            }
-
-            if (string.IsNullOrEmpty(textBox4.Text))
+            if (string.IsNullOrWhiteSpace(textBox4.Text))
             {
                 errorProvider1.SetError(textBox4, "اكتب رسالتك");
                 return;
             }
-            else
+            else errorProvider1.SetError(textBox4, "");
+
+            // Parse and prepare data
+            if (!int.TryParse(textBox2.Text, out int userId))
             {
-                errorProvider1.SetError(textBox4, "");
+                errorProvider1.SetError(textBox2, "رقم المستخدم يجب أن يكون رقمًا");
+                return;
             }
 
-            ContactMessage message = new ContactMessage
-                {
-                    name = textBox1.Text,
-                    user_id = textBox2.Text,
-                    phone = textBox3.Text,
-                    message = textBox4.Text
-                };
+            
+
+           
 
             try
             {
-                string json = JsonConvert.SerializeObject(message);
-                HttpContent content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                HttpResponseMessage response = await client.PostAsync(url, content);
-                response.EnsureSuccessStatusCode();
+                string mess = Messagecont();
+                bool sucsses = await userMessage.Send(mess);
+                
 
-                MessageBox.Show("تم إرسال الرسالة بنجاح");
+              
+
+                if (sucsses)
+                {
+                    MessageBox.Show("✅ تم ارسال البيانات بنجاح");
+                }
+                else
+                {
+                    MessageBox.Show($"❌ خطأ في الإرسال");
+                }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("حدث خطأ أثناء إرسال الرسالة: " + ex.Message);
+                MessageBox.Show($"⚠️ استثناء أثناء الإرسال: {ex.Message}");
             }
+
         }
 
-       
+        private string Messagecont()
+        {
+            string username = textBox1.Text.Trim();
+            string userId = textBox2.Text.Trim();
+            string msg = textBox4.Text.Trim();
+
+            // نعيدهم بهذا الشكل: username|user_id|message
+            return $"{username}|{userId}|{msg}";
+        }
+
     }
-}
+    }
+

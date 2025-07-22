@@ -74,6 +74,70 @@ namespace pharmacy.DAL
 
             return result;
         }
+
+        public static bool decrease(int qid,int q)
+        {
+            string query = "Update Quantity SET quantityOF=quantityOF-@q where quantityID=@id";
+          
+            try
+            {
+                OpenConnection();
+                using (SqlCommand cmd = new SqlCommand(query, connection))
+                {
+                    cmd.Parameters.AddWithValue("@id", qid);
+                    cmd.Parameters.AddWithValue("@q", q);
+
+                    cmd.ExecuteNonQuery();
+                    return true;
+
+
+                }
+            }
+
+            catch (SqlException ex)
+            {
+                System.Windows.Forms.MessageBox.Show("خطأ في الإضافة: " + ex.Message,
+                    "Database Error", System.Windows.Forms.MessageBoxButtons.OK,
+                    System.Windows.Forms.MessageBoxIcon.Error);
+                return false;
+            }
+            finally
+            {
+                CloseConnection();
+            }
+        }
+
+        public static int exd()
+        {
+            int result = 0;
+            string query = "SELECT quantityID FROM Quantity WHERE ExpiryDate < GETDATE()";
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            {
+                
+
+                try
+                {
+                    conn.Open();
+                    object value = cmd.ExecuteScalar();
+
+                    if (value != null && value != DBNull.Value)
+                    {
+                        result = Convert.ToInt32(value);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Database error: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+
+            return result;
+        }
+        
+
+
         public List<Quantity> GetAllQuantitys()
         {
             List<Quantity> quantity = new List<Quantity>();

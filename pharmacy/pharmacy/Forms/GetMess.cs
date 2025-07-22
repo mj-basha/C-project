@@ -28,30 +28,25 @@ namespace pharmacy.Forms
 
 
 
-            string apiUrl = ""; 
+            string apiUrl = "http://dev2.alashiq.com/message.php?systemId=12345678832";
+            HttpResponseMessage response = await client.GetAsync(apiUrl);
+            response.EnsureSuccessStatusCode();
 
-            try
+            string responseBody = await response.Content.ReadAsStringAsync();
+           
+
+            ApiResponse apiResponse = JsonConvert.DeserializeObject<ApiResponse>(responseBody);
+
+            if (apiResponse.success)
             {
-                HttpResponseMessage response = await client.GetAsync(apiUrl);
-                response.EnsureSuccessStatusCode();
 
-                string responseBody = await response.Content.ReadAsStringAsync();
+                textBox1.Text = responseBody;
 
-                ApiResponse apiResponse = JsonConvert.DeserializeObject<ApiResponse>(responseBody);
-
-                if (apiResponse.status)
-                {
-                    dataGridView1.DataSource = apiResponse.data;
-                    MessageBox.Show("تم تحميل الرسائل بنجاح");
-                }
-                else
-                {
-                    MessageBox.Show("فشل في جلب الرسائل: " + apiResponse.message);
-                }
+                MessageBox.Show("تم تحميل الرسائل بنجاح");
             }
-            catch (Exception ex)
+            else
             {
-                MessageBox.Show("خطأ أثناء الاتصال: " + ex.Message);
+                MessageBox.Show("فشل في جلب الرسائل: " + apiResponse.message);
             }
         }
 

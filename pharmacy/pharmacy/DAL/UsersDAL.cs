@@ -157,7 +157,36 @@ namespace pharmacy.DAL
                     CloseConnection();
                 }
             }
-           
+
+        public static int getname(string name)
+        {
+            int result = 0;
+            string query = "SELECT id FROM Users WHERE IsDeleted=0 AND username = @name";
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            {
+                cmd.Parameters.AddWithValue("@name", name);
+
+                try
+                {
+                    conn.Open();
+                    object value = cmd.ExecuteScalar();
+
+                    if (value != null && value != DBNull.Value)
+                    {
+                        result = Convert.ToInt32(value);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Database error: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+
+            return result;
         }
+
+    }
     }
 

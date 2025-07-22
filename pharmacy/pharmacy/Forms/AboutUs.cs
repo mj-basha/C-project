@@ -30,22 +30,44 @@ namespace pharmacy.Forms
 
         private async void AboutUs_Load(object sender, EventArgs e)
         {
-            string url = "";
-
+            string url = "http://dev2.alashiq.com/about.php";
             try
             {
-                HttpResponseMessage response = await client.GetAsync(url);
-                response.EnsureSuccessStatusCode();
+                using (HttpClient client = new HttpClient())
+                {
+                    client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0"); 
 
-                string json = await response.Content.ReadAsStringAsync();
-                SystemInfo info = JsonConvert.DeserializeObject<SystemInfo>(json);
+                    HttpResponseMessage response = await client.GetAsync(url);
+                    response.EnsureSuccessStatusCode();
 
-                label1.Text = info.Title;
-                label2.Text = info.About;
-                label3.Text = info.Version;
+                    string json = await response.Content.ReadAsStringAsync();
 
-                MessageBox.Show("تم جلب معلومات النظام بنجاح");
-                ActivityLogger.Log("about us", "تم بحث عن معلومات النظام بنجاح", id, username);
+                    
+                   
+
+                    var apires = JsonConvert.DeserializeObject<apires>(json);
+
+                    if (apires?.Data != null)
+                    {
+                        var info = apires.Data;
+
+                        textBox1.Text =
+                            $"عنوان الصفحة: {info.Title}\r\n\r\n" +
+                            $"الوصف:\r\n{info.Description}\r\n\r\n" +
+                            $"الإصدار: {info.System_Version}\r\n" +
+                            $"تاريخ الإنشاء: {info.Created_At}\r\n" +
+                            $"آخر تحديث: {info.Updated_At}";
+                        ActivityLogger.Log("About Us", "تم فتح صفحة معلومات حول البرنامج",id,username);
+                      
+                    }
+                    else
+                    {
+                        MessageBox.Show("تعذر جلب البيانات من الخادم (فك JSON أعاد null).");
+                    }
+                }
+            
+                  
+                
             }
             catch (Exception ex)
             {

@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using pharmacy.DAL;
 using pharmacy.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
+using pharmacy.Models;
 
 namespace pharmacy
 {
@@ -18,6 +19,7 @@ namespace pharmacy
         private readonly string role;
         private readonly string id;
         private readonly string username;
+        UserMessage messageService = new HttpUserMessage();
         public Form2(string role,string id,string username)
         {
             InitializeComponent();
@@ -25,6 +27,7 @@ namespace pharmacy
             this.id = id;
             this.username = username;
             ConfigureAccess();
+           
         }
 
         private void ConfigureAccess()
@@ -128,7 +131,7 @@ namespace pharmacy
 
         private void btnCallUs_Click(object sender, EventArgs e)
         {
-            CallUs sForm = new CallUs();
+            CallUs sForm = new CallUs(messageService);
             ShowFormin(sForm);
         }
 
@@ -136,6 +139,17 @@ namespace pharmacy
         {
             GetMess sForm = new GetMess();
             ShowFormin(sForm);
+        }
+
+        private void Form2_Load(object sender, EventArgs e)
+        {
+            int qid=QuantityDAL.exd();
+            if (qid > 0)
+            {
+                int mid=MedicineDAL.getmid(qid);
+                string mname=MedicineDAL.getmname(mid);
+                MessageBox.Show("Medicine "+mname+" where MedicineID= "+mid+" Expierd");
+            }
         }
     }
 }

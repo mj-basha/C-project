@@ -5,7 +5,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using iText.IO.Font;
+using iText.Kernel.Font;
+using iText.Kernel.Pdf;
+using iText.Layout;
+using iText.Layout.Element;
+using iText.Layout.Properties;
+using System.IO;
 using pharmacy.Models;
+using iText.IO.Font.Constants;
 
 namespace pharmacy.DAL
 {
@@ -35,7 +43,7 @@ namespace pharmacy.DAL
                     System.Windows.Forms.MessageBox.Show("خطأ في إضافة الفاتورة: " + ex.Message,
                         "Database Error", System.Windows.Forms.MessageBoxButtons.OK,
                         System.Windows.Forms.MessageBoxIcon.Error);
-                    return false; 
+                    return false;
                 }
                 finally
                 {
@@ -109,8 +117,34 @@ namespace pharmacy.DAL
                 {
                     CloseConnection();
                 }
-        }
+            }
             return invoice;
         }
-}
+
+        public static void CreateInvoicePdf(string filePath, string content)
+        {
+            PdfWriter writer = new PdfWriter(filePath);
+            
+                PdfDocument pdf = new PdfDocument(writer);
+                Document document = new Document(pdf);
+
+                
+                PdfFont boldFont = PdfFontFactory.CreateFont(StandardFonts.HELVETICA_BOLD);
+
+                
+                Paragraph titleParagraph = new Paragraph("Invoice Report")
+                    .SetFont(boldFont)
+                    .SetFontSize(18)
+                    .SetTextAlignment(TextAlignment.CENTER);
+
+                document.Add(titleParagraph);
+                document.Add(new Paragraph("\n")); 
+
+                
+                document.Add(new Paragraph(content));
+
+                document.Close();
+            
+        }
+    }
 }

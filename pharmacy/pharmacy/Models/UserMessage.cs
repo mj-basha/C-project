@@ -6,13 +6,11 @@ using System.Threading.Tasks;
 
 namespace pharmacy.Forms
 {
-    public class UserMessage
+    public interface UserMessage
     {
-        public int id { get; set; }
-        public string name { get; set; }
-        public int user_id { get; set; }
-        public string phone { get; set; }
-        public string message { get; set; }
-        public DateTime created_at { get; set; }
+        Task<bool> Send(string message);
+        Task<IEnumerable<ContactMessage>> GetAllMessagesAsync();
+        Task<bool> MarkMessage(int messid);
+
     }
 }

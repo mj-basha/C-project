@@ -158,7 +158,91 @@ namespace pharmacy.DAL
                 CloseConnection();
             }
         }
+        public static int getqid(int mid)
+        {
+            int result = 0;
+            string query = "SELECT quantityID FROM Medicines WHERE MedicineID = @id";
 
-       
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            {
+                cmd.Parameters.AddWithValue("@id", mid);
+
+                try
+                {
+                    conn.Open();
+                    object value = cmd.ExecuteScalar();
+
+                    if (value != null && value != DBNull.Value)
+                    {
+                        result = Convert.ToInt32(value);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Database error: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+
+            return result;
+        }
+
+        public static int getmid(int qid)
+        {
+            int result = 0;
+            string query = "SELECT MedicineID FROM Medicines WHERE quantityID = @id"; 
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            {
+                cmd.Parameters.AddWithValue("@id", qid);
+
+                try
+                {
+                    conn.Open();
+                    object value = cmd.ExecuteScalar();
+
+                    if (value != null && value != DBNull.Value)
+                    {
+                        result = Convert.ToInt32(value);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Database error: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+
+            return result;
+        }
+
+        public static string getmname(int mid)
+        {
+            string result = null;
+            string query = "SELECT Name FROM Medicines WHERE MedicineID = @id";
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            {
+                cmd.Parameters.AddWithValue("@id", mid);
+
+                try
+                {
+                    conn.Open();
+                    object value = cmd.ExecuteScalar();
+
+                    if (value != null && value != DBNull.Value)
+                    {
+                        result = Convert.ToString(value);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Database error: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+
+            return result;
+        }
     }
 }

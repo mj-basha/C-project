@@ -75,15 +75,22 @@ namespace pharmacy.Forms
             {
                 errorProvider1.SetError(cmbRole, "");
             }
-
+            if (UsersDAL.getname(u) > 0)
+            {
+                errorProvider1.SetError(cmbRole, "اسم المستخدم موجود مسبقا");
+                return;
+            }
+            else
+            {
                 Users user = new Users();
-            user.username = u;
-            user.password_hash = p;
-            user.role = r;
+                user.username = u;
+                user.password_hash = p;
+                user.role = r;
 
-            UsersDAL.AddUser(user);
-            ActivityLogger.Log("Add Users", "تم اضافة مستخدم بنجاح", id, username);
-            Ref();
+                UsersDAL.AddUser(user);
+                ActivityLogger.Log("Add Users", "تم اضافة مستخدم بنجاح", id, username);
+                Ref();
+            }
         }
 
         private void btnRefresh_Click(object sender, EventArgs e)
